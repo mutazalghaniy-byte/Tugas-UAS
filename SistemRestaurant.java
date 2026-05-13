@@ -31,7 +31,7 @@ class Reservasi {
 // ============================================================
 //  KELAS UTAMA: CRUD + entry point
 // ============================================================
-public class RestaurantCRUD {
+public class SistemRestaurant {
 
     // ---------- Array manual sebagai penyimpanan data ----------
     static final int MAX_DATA   = 100;
