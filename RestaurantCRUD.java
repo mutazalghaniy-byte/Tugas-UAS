@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.io.*;
 
 class Reservasi {
     int    id;
@@ -39,6 +40,7 @@ public class RestaurantCRUD {
     static int nextId           = 1;          // auto-increment ID
 
     static Scanner sc = new Scanner(System.in);
+    static final String FILE_NAME = "reservasi.txt";
 
     // ==========================================================
     //  UTILITY: cetak garis pemisah & header tabel
@@ -122,6 +124,8 @@ public class RestaurantCRUD {
         data[jumlahData++] = baru;
 
         System.out.println("[OK] Reservasi berhasil ditambahkan dengan ID: " + baru.id);
+        simpanKeFile();
+
     }
 
     // ==========================================================
@@ -229,7 +233,9 @@ public class RestaurantCRUD {
             }
         }
 
-        System.out.println("[OK] Data reservasi ID " + idCari + " berhasil diperbarui.");
+       System.out.println("[OK] Data reservasi ID " + idCari + " berhasil diperbarui.");
+        simpanKeFile();
+
     }
 
     // ==========================================================
@@ -269,6 +275,7 @@ public class RestaurantCRUD {
         if (konfirmasi.equals("y")) {
             data[idx].status = "DIHAPUS";   // Soft delete: status diubah, data tetap ada
             System.out.println("[OK] Reservasi ID " + idCari + " berhasil dihapus (soft delete).");
+            simpanKeFile();
         } else {
             System.out.println("[BATAL] Penghapusan dibatalkan.");
         }
@@ -338,6 +345,121 @@ public class RestaurantCRUD {
     }
 
     // ==========================================================
+    //  SAVE DATA KE FILE
+    // ==========================================================
+    static void simpanKeFile() {
+
+        try {
+
+            BufferedWriter bw = new BufferedWriter(
+                    new FileWriter(FILE_NAME)
+            );
+
+            for (int i = 0; i < jumlahData; i++) {
+
+                Reservasi r = data[i];
+
+                bw.write(
+                        r.id + ";" +
+                        r.namaCustomer + ";" +
+                        r.nomorMeja + ";" +
+                        r.tanggal + ";" +
+                        r.jam + ";" +
+                        r.jumlahTamu + ";" +
+                        r.kategoriMeja + ";" +
+                        r.status + ";" +
+                        r.counter
+                );
+
+                bw.newLine();
+            }
+
+            bw.close();
+
+            System.out.println("[OK] Data berhasil disimpan ke file.");
+
+        } catch (IOException e) {
+
+            System.out.println("[ERROR] Gagal menyimpan file!");
+
+        }
+    }
+
+
+    // ==========================================================
+    //  LOAD DATA DARI FILE
+    // ==========================================================
+    static void loadDariFile() {
+
+        File file = new File(FILE_NAME);
+
+        // jika file belum ada
+        if (!file.exists()) {
+            System.out.println("[INFO] File data belum tersedia.");
+            return;
+        }
+
+        try {
+
+            BufferedReader br = new BufferedReader(
+                    new FileReader(FILE_NAME)
+            );
+
+            String line;
+
+            jumlahData = 0;
+
+            while ((line = br.readLine()) != null) {
+
+                String[] bagian = line.split(";");
+
+                int id             = Integer.parseInt(bagian[0]);
+                String nama        = bagian[1];
+                String meja        = bagian[2];
+                String tanggal     = bagian[3];
+                String jam         = bagian[4];
+                int tamu           = Integer.parseInt(bagian[5]);
+                String kategori    = bagian[6];
+                String status      = bagian[7];
+                int counter        = Integer.parseInt(bagian[8]);
+
+                Reservasi r = new Reservasi(
+                        id,
+                        nama,
+                        meja,
+                        tanggal,
+                        jam,
+                        tamu,
+                        kategori
+                );
+
+                r.status = status;
+                r.counter = counter;
+
+                data[jumlahData++] = r;
+
+                // update nextId agar tidak bentrok
+                if (id >= nextId) {
+                    nextId = id + 1;
+                }
+            }
+
+            br.close();
+
+            System.out.println("[OK] Data berhasil dimuat dari file.");
+
+        } catch (IOException e) {
+
+            System.out.println("[ERROR] Gagal membaca file!");
+
+        } catch (Exception e) {
+
+            System.out.println("[ERROR] Format file tidak valid!");
+
+        }
+    }
+
+    // ==========================================================
     //  HELPER: Isi data dummy untuk demo/pengujian
     // ==========================================================
     static void isiDataDemo() {
@@ -357,14 +479,18 @@ public class RestaurantCRUD {
     // ==========================================================
     public static void main(String[] args) {
 
-        System.out.println("\n" + "=".repeat(50));
-        System.out.println("   RESTAURANT RESERVATION SYSTEM");
-        System.out.println("   Modul CRUD – ASD SYS61618");
-        System.out.println("=".repeat(50));
+    System.out.println("\n" + "=".repeat(50));
+    System.out.println("   RESTAURANT RESERVATION SYSTEM");
+    System.out.println("=".repeat(50));
 
+loadDariFile();
+
+    if (jumlahData == 0) {
         isiDataDemo();
+        simpanKeFile();
+}
 
-        boolean jalan = true;
+boolean jalan = true;
         while (jalan) {
             System.out.println("\n===== MENU UTAMA =====");
             System.out.println("[1] Tambah Reservasi Baru");
