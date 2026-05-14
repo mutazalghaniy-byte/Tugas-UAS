@@ -148,8 +148,7 @@ public class SistemRestaurant {
         }
         cetakGaris();
 
-        // Statistik sederhana
-        hitungStatistik();
+ 
     }
 
     // ==========================================================
@@ -281,44 +280,7 @@ public class SistemRestaurant {
         }
     }
 
-    // ==========================================================
-    //  HELPER: Statistik Data
-    // ==========================================================
-    static void hitungStatistik() {
-        int total    = 0;
-        int aktif    = 0;
-        int selesai  = 0;
-        int dihapus  = 0;
-        int vip      = 0;
-        int regular  = 0;
-        int outdoor  = 0;
-
-        for (int i = 0; i < jumlahData; i++) {
-            Reservasi r = data[i];
-            total++;
-            switch (r.status) {
-                case "AKTIF":    aktif++;   break;
-                case "SELESAI":  selesai++; break;
-                case "DIHAPUS":  dihapus++; break;
-            }
-            if (!r.status.equals("DIHAPUS")) {
-                switch (r.kategoriMeja) {
-                    case "VIP":     vip++;     break;
-                    case "REGULAR": regular++; break;
-                    case "OUTDOOR": outdoor++; break;
-                }
-            }
-        }
-
-        System.out.println("\n--- STATISTIK ---");
-        System.out.println("Total data    : " + total);
-        System.out.println("Aktif         : " + aktif);
-        System.out.println("Selesai       : " + selesai);
-        System.out.println("Dihapus       : " + dihapus);
-        System.out.println("Meja VIP      : " + vip);
-        System.out.println("Meja Regular  : " + regular);
-        System.out.println("Meja Outdoor  : " + outdoor);
-    }
+   
 
     // ==========================================================
     //  HELPER: Cari index array berdasarkan ID (untuk CRUD)
