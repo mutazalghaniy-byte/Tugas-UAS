@@ -1,152 +1,220 @@
-// =========================================================
-// SEARCHING - Linear Search berdasarkan Nama Tamu
-// =========================================================
-static void linearSearchNama(LinkedList list, String keyword) {
+// ==========================================================
+// MENU SEARCHING
+// ==========================================================
+static void menuSearching() {
 
-    System.out.println("\n=== LINEAR SEARCH ===");
-    System.out.println("Mencari nama : " + keyword);
+    System.out.println("\n===== MENU SEARCHING =====");
+    System.out.println("[1] Linear Search  - Cari berdasarkan Nama Customer");
+    System.out.println("[2] Binary Search  - Cari berdasarkan ID");
+    System.out.println("[3] Cari berdasarkan Kategori");
+    System.out.println("[0] Kembali");
 
-    Reservation temp = list.head;
+    System.out.print("Pilih menu: ");
+    String pilihan = sc.nextLine().trim();
 
-    boolean ditemukan = false;
-    int iterasi = 0;
+    switch (pilihan) {
 
-    while (temp != null) {
+        case "1":
+            linearSearchByNama();
+            break;
 
-        iterasi++;
+        case "2":
+            binarySearchById();
+            break;
 
-        if (!temp.isDeleted &&
-            temp.namaTamu.toLowerCase().contains(keyword.toLowerCase())) {
+        case "3":
+            cariByKategori();
+            break;
 
-            System.out.println("\nData ditemukan!");
-            System.out.println("ID       : " + temp.id);
-            System.out.println("Nama     : " + temp.namaTamu);
-            System.out.println("Meja     : " + temp.noMeja);
-            System.out.println("Tanggal  : " + temp.tanggal);
-            System.out.println("Status   : " + temp.status);
+        case "0":
+            System.out.println("[INFO] Kembali ke menu utama.");
+            break;
 
-            ditemukan = true;
-        }
-
-        temp = temp.next;
+        default:
+            System.out.println("[ERROR] Pilihan tidak valid!");
     }
-
-    if (!ditemukan) {
-        System.out.println("\nData tidak ditemukan.");
-    }
-
-    System.out.println("Jumlah iterasi : " + iterasi);
 }
 
 
-// =========================================================
-// SEARCHING - Binary Search berdasarkan ID
-// =========================================================
-static void binarySearchID(LinkedList list, int targetID) {
+// ==========================================================
+// SEARCHING 1 : Linear Search berdasarkan Nama
+// Kompleksitas Waktu : O(n)
+// Kompleksitas Ruang : O(1)
+// ==========================================================
+static void linearSearchByNama() {
 
-    System.out.println("\n=== BINARY SEARCH ===");
-    System.out.println("Mencari ID : " + targetID);
+    System.out.println("\n>>> LINEAR SEARCH : Cari Berdasarkan Nama <<<");
 
-    // Konversi LinkedList ke Array
-    Reservation[] arr = list.toArray();
+    System.out.print("Masukkan nama customer : ");
+    String keyword = sc.nextLine().trim();
 
-    // Sorting berdasarkan ID
-    bubbleSortByID(arr);
-
-    int low = 0;
-    int high = arr.length - 1;
+    if (keyword.isEmpty()) {
+        System.out.println("[ERROR] Nama tidak boleh kosong!");
+        return;
+    }
 
     boolean ditemukan = false;
-    int iterasi = 0;
 
-    while (low <= high) {
+    cetakHeader();
 
-        iterasi++;
+    for (int i = 0; i < jumlahData; i++) {
 
-        int mid = (low + high) / 2;
+        if (data[i] == null) {
+            continue;
+        }
 
-        // Jika data ditemukan
-        if (arr[mid].id == targetID) {
+        if (data[i].status.equals("DIHAPUS")) {
+            continue;
+        }
 
-            System.out.println("\nData ditemukan!");
-            System.out.println("ID       : " + arr[mid].id);
-            System.out.println("Nama     : " + arr[mid].namaTamu);
-            System.out.println("Meja     : " + arr[mid].noMeja);
-            System.out.println("Tanggal  : " + arr[mid].tanggal);
-            System.out.println("Jam      : " + arr[mid].jam);
-            System.out.println("Status   : " + arr[mid].status);
+        if (data[i].namaCustomer
+                .toLowerCase()
+                .contains(keyword.toLowerCase())) {
+
+            cetakBaris(data[i]);
+            ditemukan = true;
+        }
+    }
+
+    cetakGaris();
+
+    if (!ditemukan) {
+        System.out.println("[INFO] Data tidak ditemukan.");
+    }
+}
+
+
+// ==========================================================
+// SEARCHING 2 : Binary Search berdasarkan ID
+// Kompleksitas Waktu : O(log n)
+// Kompleksitas Ruang : O(1)
+// ==========================================================
+static void binarySearchById() {
+
+    System.out.println("\n>>> BINARY SEARCH : Cari Berdasarkan ID <<<");
+
+    Reservasi[] temp = salinDataAktif();
+
+    if (temp.length == 0) {
+        System.out.println("[INFO] Belum ada data aktif.");
+        return;
+    }
+
+    // Bubble Sort berdasarkan ID
+    for (int i = 0; i < temp.length - 1; i++) {
+
+        for (int j = 0; j < temp.length - 1 - i; j++) {
+
+            if (temp[j].id > temp[j + 1].id) {
+
+                Reservasi swap = temp[j];
+                temp[j] = temp[j + 1];
+                temp[j + 1] = swap;
+            }
+        }
+    }
+
+    System.out.print("Masukkan ID yang dicari : ");
+
+    int idCari;
+
+    try {
+
+        idCari = Integer.parseInt(sc.nextLine().trim());
+
+    } catch (NumberFormatException e) {
+
+        System.out.println("[ERROR] ID harus berupa angka!");
+        return;
+    }
+
+    int kiri = 0;
+    int kanan = temp.length - 1;
+
+    boolean ditemukan = false;
+
+    while (kiri <= kanan) {
+
+        int tengah = (kiri + kanan) / 2;
+
+        if (temp[tengah].id == idCari) {
+
+            cetakHeader();
+            cetakBaris(temp[tengah]);
+            cetakGaris();
 
             ditemukan = true;
             break;
-        }
 
-        // Cari ke kanan
-        else if (arr[mid].id < targetID) {
+        } else if (temp[tengah].id < idCari) {
 
-            low = mid + 1;
-        }
+            kiri = tengah + 1;
 
-        // Cari ke kiri
-        else {
+        } else {
 
-            high = mid - 1;
+            kanan = tengah - 1;
         }
     }
 
     if (!ditemukan) {
-        System.out.println("\nData tidak ditemukan.");
+        System.out.println("[INFO] Data dengan ID " + idCari + " tidak ditemukan.");
     }
-
-    System.out.println("Jumlah iterasi : " + iterasi);
 }
 
 
-// =========================================================
-// SEARCHING - Category Search berdasarkan Kategori
-// =========================================================
-static void searchByKategori(LinkedList list, String kategori) {
+// ==========================================================
+// SEARCHING 3 : Cari berdasarkan Kategori
+// Kompleksitas Waktu : O(n)
+// Kompleksitas Ruang : O(1)
+// ==========================================================
+static void cariByKategori() {
 
-    System.out.println("\n=== SEARCH BY KATEGORI ===");
-    System.out.println("Mencari kategori : " + kategori);
+    System.out.println("\n>>> SEARCH BY KATEGORI <<<");
 
-    Reservation temp = list.head;
+    System.out.print("Masukkan kategori (VIP/REGULAR/OUTDOOR) : ");
+
+    String kategori = sc.nextLine().trim().toUpperCase();
+
+    if (!kategori.equals("VIP") &&
+        !kategori.equals("REGULAR") &&
+        !kategori.equals("OUTDOOR")) {
+
+        System.out.println("[ERROR] Kategori tidak valid!");
+        return;
+    }
 
     boolean ditemukan = false;
-    int jumlahData = 0;
-    int totalTamu = 0;
+    int jumlah = 0;
 
-    while (temp != null) {
+    cetakHeader();
 
-        if (!temp.isDeleted &&
-            temp.kategori.equalsIgnoreCase(kategori)) {
+    for (int i = 0; i < jumlahData; i++) {
 
-            System.out.println("\nData ditemukan!");
-            System.out.println("ID          : " + temp.id);
-            System.out.println("Nama        : " + temp.namaTamu);
-            System.out.println("Meja        : " + temp.noMeja);
-            System.out.println("Tanggal     : " + temp.tanggal);
-            System.out.println("Jam         : " + temp.jam);
-            System.out.println("JumlahTamu  : " + temp.jumlahTamu);
-            System.out.println("Kategori    : " + temp.kategori);
-            System.out.println("Status      : " + temp.status);
-
-            ditemukan = true;
-
-            jumlahData++;
-            totalTamu += temp.jumlahTamu;
+        if (data[i] == null) {
+            continue;
         }
 
-        temp = temp.next;
+        if (data[i].status.equals("DIHAPUS")) {
+            continue;
+        }
+
+        if (data[i].kategoriMeja.equals(kategori)) {
+
+            cetakBaris(data[i]);
+
+            ditemukan = true;
+            jumlah++;
+        }
     }
+
+    cetakGaris();
 
     if (!ditemukan) {
 
-        System.out.println("\nData tidak ditemukan.");
-        System.out.println("Kategori tersedia : VIP / Reguler / Private");
+        System.out.println("[INFO] Data kategori tidak ditemukan.");
 
     } else {
 
-        System.out.println("\nTotal reservasi : " + jumlahData);
-        System.out.println("Total tamu      : " + totalTamu);
+        System.out.println("Total data kategori " + kategori + " : " + jumlah);
     }
 }
