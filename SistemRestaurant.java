@@ -1,5 +1,5 @@
-import java.util.Scanner;
 import java.io.*;
+import java.util.Scanner;
 
 class Reservasi {
     int    id;
@@ -31,7 +31,7 @@ class Reservasi {
 // ============================================================
 //  KELAS UTAMA: CRUD + entry point
 // ============================================================
-public class SistemRestaurant {
+public class SistemRestaurant{
 
     // ---------- Array manual sebagai penyimpanan data ----------
     static final int MAX_DATA   = 100;
@@ -344,7 +344,33 @@ public class SistemRestaurant {
         return idx;
     }
 
-    // ==========================================================
+    // =========================================================
+// SORTING - Selection Sort berdasarkan Nama
+// =========================================================
+static void selectionSortByNama(Reservasi[] arr) {
+
+    int n = arr.length;
+
+    for (int i = 0; i < n - 1; i++) {
+
+        int minIdx = i;
+
+        for (int j = i + 1; j < n; j++) {
+
+            if (arr[j].namaCustomer.compareToIgnoreCase(
+                    arr[minIdx].namaCustomer) < 0) {
+
+                minIdx = j;
+            }
+        }
+    
+    // Tukar data
+        Reservasi temp = arr[minIdx];
+        arr[minIdx] = arr[i];
+        arr[i] = temp;
+    }
+}
+        // ==========================================================
     //  SAVE DATA KE FILE
     // ==========================================================
     static void simpanKeFile() {
