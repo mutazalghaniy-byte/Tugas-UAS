@@ -835,7 +835,7 @@ loadDariFile();
         isiDataDemo();
         simpanKeFile();
 }
-
+Tersedikit
 boolean jalan = true;
         while (jalan) {
             System.out.println("\n===== MENU UTAMA =====");
