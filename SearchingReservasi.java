@@ -160,6 +160,34 @@ static void binarySearchById() {
         System.out.println("[INFO] Data dengan ID " + idCari + " tidak ditemukan.");
     }
 }
+static Reservasi[] salinDataAktif() {
+
+    int count = 0;
+
+    for (int i = 0; i < jumlahData; i++) {
+
+        if (data[i] != null &&
+            !data[i].status.equals("DIHAPUS")) {
+
+            count++;
+        }
+    }
+
+    Reservasi[] temp = new Reservasi[count];
+
+    int idx = 0;
+
+    for (int i = 0; i < jumlahData; i++) {
+
+        if (data[i] != null &&
+            !data[i].status.equals("DIHAPUS")) {
+
+            temp[idx++] = data[i];
+        }
+    }
+
+    return temp;
+}
 
 
 // ==========================================================
@@ -218,3 +246,44 @@ static void cariByKategori() {
         System.out.println("Total data kategori " + kategori + " : " + jumlah);
     }
 }
+
+
+static void menuSorting() {
+        System.out.println("\n===== MENU SORTING =====");
+        System.out.println("[1] Bubble Sort    - Urutkan berdasarkan ID (Ascending)");
+        System.out.println("[2] Selection Sort - Urutkan berdasarkan Nama Customer (A-Z)");
+        System.out.println("[3] Insertion Sort - Urutkan berdasarkan Jumlah Tamu (Terbanyak)");
+        System.out.println("[0] Kembali");
+        System.out.print("Pilih metode sorting: ");
+        String p = sc.nextLine().trim();
+
+        Reservasi[] temp = salinDataAktif();
+        if (temp.length == 0 && !p.equals("0")) {
+            System.out.println("[INFO] Belum ada data aktif untuk diurutkan."); return;
+        }
+
+        switch (p) {
+            case "1":
+                bubbleSortById(temp);
+                System.out.println("\n>>> HASIL BUBBLE SORT: ID Ascending <<<");
+                System.out.println("Kompleksitas Waktu: O(n^2) worst, O(n) best | Ruang: O(1)");
+                tampilkanHasilSort(temp);
+                break;
+            case "2":
+                selectionSortByNama(temp);
+                System.out.println("\n>>> HASIL SELECTION SORT: Nama A-Z <<<");
+                System.out.println("Kompleksitas Waktu: O(n^2) | Kompleksitas Ruang: O(1)");
+                tampilkanHasilSort(temp);
+                break;
+            case "3":
+                insertionSortByJumlahTamu(temp);
+                System.out.println("\n>>> HASIL INSERTION SORT: Jumlah Tamu Terbanyak ke Tersedikit <<<");
+                System.out.println("Kompleksitas Waktu: O(n^2) worst, O(n) best | Ruang: O(1)");
+                tampilkanHasilSort(temp);
+                break;
+            case "0":
+                System.out.println("[INFO] Kembali ke menu utama."); break;
+            default:
+                System.out.println("[ERROR] Pilihan tidak valid!");
+        }
+    }
