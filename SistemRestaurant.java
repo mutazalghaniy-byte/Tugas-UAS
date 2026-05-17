@@ -237,6 +237,66 @@ public class SistemRestaurant{
 
     }
 
+// ==========================================================
+// UPDATE STATUS RESERVASI
+// ==========================================================
+static void updateStatusReservasi() {
+
+    System.out.println("\n>>> UPDATE STATUS RESERVASI <<<");
+
+    System.out.print("Masukkan ID Reservasi : ");
+
+    int idCari;
+
+    try {
+        idCari = Integer.parseInt(sc.nextLine().trim());
+    } catch (NumberFormatException e) {
+        System.out.println("[ERROR] ID harus angka!");
+        return;
+    }
+
+    int idx = cariIndexById(idCari);
+
+    if (idx == -1) {
+        System.out.println("[ERROR] ID tidak ditemukan!");
+        return;
+    }
+
+    Reservasi r = data[idx];
+
+    if (r.status.equals("DIHAPUS")) {
+        System.out.println("[ERROR] Reservasi sudah dihapus!");
+        return;
+    }
+
+    System.out.println("Status saat ini : " + r.status);
+
+    System.out.print("Masukkan status baru (AKTIF/SELESAI): ");
+
+    String statusBaru = sc.nextLine().trim().toUpperCase();
+
+    if (!statusBaru.equals("AKTIF") &&
+        !statusBaru.equals("SELESAI")) {
+
+        System.out.println("[ERROR] Status tidak valid!");
+        return;
+    }
+
+    String statusLama = r.status;
+
+    r.status = statusBaru;
+
+    System.out.println("\n=== STATUS BERHASIL DIUPDATE ===");
+    System.out.println("ID Reservasi : " + r.id);
+    System.out.println("Nama Customer: " + r.namaCustomer);
+    System.out.println("Status Lama  : " + statusLama);
+    System.out.println("Status Baru  : " + statusBaru);
+    System.out.println("Counter      : " + r.counter);
+
+    simpanKeFile();
+}
+
+
     // ==========================================================
     //  4. DELETE – Hapus Data (Soft Delete via Status)
     // ==========================================================
@@ -843,10 +903,11 @@ boolean jalan = true;
             System.out.println("[2] Tampilkan Semua Reservasi");
             System.out.println("[3] Edit Reservasi");
             System.out.println("[4] Hapus Reservasi");
-            System.out.println("[5] Menu Searching");
-            System.out.println("[6] Menu Sorting");
-            System.out.println("[7] statistik");
-            System.out.println("[8] simpan data ke file");
+            System.out.println("[5] Update Status Reservasi");
+            System.out.println("[6] Menu Searching");
+            System.out.println("[7] Menu Sorting");
+            System.out.println("[8] statistik");
+            System.out.println("[9] simpan data ke file");
             System.out.println("[0] Keluar");
             System.out.print("Pilih menu: ");
 
@@ -857,10 +918,11 @@ boolean jalan = true;
                 case "2": tampilkanSemua();   break;
                 case "3": editReservasi();    break;
                 case "4": hapusReservasi();   break;
-                case "5": menuSearching(); break;
-                case "6": menuSorting(); break;
-                case "7": hitungStatistik();  break;
-                case "8": simpanKeFile();  break;
+                case "5": updateStatusReservasi(); break;
+                case "6": menuSearching(); break;
+                case "7": menuSorting(); break;
+                case "8": hitungStatistik();  break;
+                case "9": simpanKeFile();  break;
                 case "0":
                     System.out.println("Terima kasih! Program selesai.");
                     jalan = false;
