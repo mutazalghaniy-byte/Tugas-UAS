@@ -1,7 +1,7 @@
-
+----------------------------------------------------------------
    RESTAURANT RESERVATION SYSTEM
    Laporan Project UAS - Algoritma dan Struktur Data 
-
+----------------------------------------------------------------
 
 ----------------------------------------------------------------
 DESKRIPSI PROGRAM
@@ -215,6 +215,6 @@ CATATAN TEKNIS
   - Log aktivitas hanya tersimpan selama sesi program berjalan
     dan akan hilang saat program ditutup.
 
-================================================================
+----------------------------------------------------------------
    Terima kasih telah menggunakan Restaurant Reservation System
-================================================================
+----------------------------------------------------------------
