@@ -1126,7 +1126,7 @@ public class SistemRestaurant {
         System.out.println("\n===== MENU WAITING LIST =====");
         System.out.println("[1] Tambah ke Waiting List");
         System.out.println("[2] Tampilkan Waiting List");
-        System.out.println("[3] Promosikan ke Reservasi Aktif (FIFO)");
+        System.out.println("[3] Promosikan ke Reservasi Aktif");
         System.out.println("[4] Hapus dari Waiting List");
         System.out.println("[0] Kembali");
         System.out.print("Pilih menu: ");
